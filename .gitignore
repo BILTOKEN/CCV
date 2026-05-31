@@ -1,0 +1,27 @@
+# CCV — Claude Code Vision v4.2
+# 大型二进制依赖（GitHub 不存）
+_runtime/node/
+_runtime/node_modules/
+_runtime/.npm-cache/
+_runtime/PortableGit/
+_runtime/VSCode/
+
+# 仪表板小型依赖保留（iconv-lite 等，体积小）
+# _runtime/dashboard/node_modules/ — 提交到仓库
+
+# 用户数据
+_runtime/data/
+
+# Claude 内部文件
+_runtime/.claude/
+
+# 编译产物
+*.exe
+*.obj
+*.pdb
+
+# macOS
+.DS_Store
+.Spotlight-V100
+.fseventsd
+.mediaexplorer
