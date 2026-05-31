@@ -1,0 +1,15 @@
+# 大文件（走 GitHub Release 分发）
+_runtime/node/
+_runtime/node_modules/
+_runtime/PortableGit/
+_runtime/VSCode/
+_runtime/.npm-cache/
+
+# 用户数据
+_runtime/data/
+
+# 系统垃圾
+.DS_Store
+.Spotlight-V100
+.fseventsd
+.mediaexplorer

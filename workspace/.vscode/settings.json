@@ -1,0 +1,5 @@
+{
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "claudeCode.preferredLocation": "sidebar"
+}

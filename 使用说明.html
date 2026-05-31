@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCV v4.2（Claude Code Vision）- 使用说明</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  background:#f0f2f5; color:#1a1a2e; line-height:1.8; padding:0;
+}
+.hero {
+  background:linear-gradient(135deg,#0f111f 0%,#1a1d27 50%,#3b82f6 100%);
+  color:#fff; text-align:center; padding:50px 20px;
+}
+.hero h1 { font-size:32px; font-weight:700; }
+.hero p { font-size:15px; opacity:0.75; margin-top:6px; }
+.badge {
+  display:inline-block; background:rgba(255,255,255,0.15);
+  padding:3px 14px; border-radius:20px; font-size:13px; margin-top:10px;
+}
+.container { max-width:800px; margin:0 auto; padding:30px 20px; }
+.card {
+  background:#fff; border-radius:12px; padding:28px;
+  margin-bottom:22px; box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+.card h2 {
+  font-size:20px; color:#0f111f;
+  border-bottom:2px solid #e8ecf1; padding-bottom:10px; margin-bottom:18px;
+}
+.card h2 .num {
+  display:inline-block; background:#3b82f6; color:#fff;
+  width:26px; height:26px; text-align:center; line-height:26px;
+  border-radius:50%; font-size:13px; margin-right:8px;
+}
+.card h3 { font-size:16px; color:#0f111f; margin:14px 0 8px; }
+.step {
+  background:#f7f9fc; border-left:4px solid #3b82f6;
+  padding:14px 18px; margin:10px 0; border-radius:0 8px 8px 0;
+}
+code {
+  background:#eef2f7; padding:2px 7px; border-radius:4px;
+  font-family:Consolas,monospace; font-size:13px;
+}
+.tip { padding:12px 16px; border-radius:8px; margin:10px 0; font-size:14px; }
+.tip-info { background:#e8f4fd; border-left:4px solid #2196f3; }
+.tip-warn { background:#fff8e1; border-left:4px solid #ff9800; }
+.tip-ok { background:#e8f5e9; border-left:4px solid #4caf50; }
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; }
+th,td { border:1px solid #e0e0e0; padding:10px 14px; text-align:left; }
+th { background:#1a1d27; color:#fff; font-weight:600; }
+tr:nth-child(even) { background:#f8f9fb; }
+.faq-q { padding:12px 16px; background:#f7f9fc; border-radius:8px; margin:8px 0; font-weight:600; font-size:14px; }
+.faq-a { padding:8px 16px 14px; color:#555; font-size:14px; }
+.screenshot {
+  background:#f5f6f8; border:1px dashed #ccc; border-radius:8px;
+  padding:20px; text-align:center; margin:12px 0; color:#999; font-size:13px;
+}
+.screenshot img { max-width:100%; border-radius:6px; border:1px solid #e0e0e0; }
+.footer { text-align:center; padding:30px; color:#999; font-size:13px; }
+.feature-list { margin:8px 0; padding-left:20px; }
+.feature-list li { margin:6px 0; font-size:14px; }
+.changelog { font-size:13px; color:#888; text-align:left; max-width:520px; margin:0 auto; }
+.changelog h4 { color:#555; margin-bottom:6px; }
+.changelog ul { list-style:none; padding:0; }
+.changelog li { padding:2px 0; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>CCV v4.2（Claude Code Vision）</h1>
+  <p>插上 U 盘 → 双击启动器 → 选模式开用，就这么简单</p>
+  <div class="badge">支持生成 Word / Excel / PPT 文档</div>
+</div>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- 第一步：获取 API Key -->
+<!-- ============================================================ -->
+<div class="card">
+  <h2><span class="num">1</span>申请一个 API Key — AI 的"通行证"</h2>
+
+  <p>API Key 是 AI 服务的"通行证"，软件通过它才能调用 AI 帮你写代码、回答问题。AI 服务按量收费（充 10 块钱能用很久），需要先充值再创建 Key。</p>
+
+  <div class="tip tip-info" style="margin:12px 0;">
+    <strong>放心：</strong>你的 API Key 只保存在 U 盘文件里，<strong>仅在本地运行，不会上传到任何服务器</strong>。
+  </div>
+
+  <p>推荐用 <strong>DeepSeek</strong>（便宜、不用梯子、够用）：</p>
+
+  <div class="step">
+    <strong>① 打开 DeepSeek 官网</strong>
+    <div style="font-size:14px; color:#555; margin-top:2px;">浏览器打开 <a href="https://platform.deepseek.com/"><strong>platform.deepseek.com</strong></a> → 点「API 开放平台」</div>
+  </div>
+
+  <div class="screenshot">
+    <img src="_runtime/images/点击API开放平台.png" alt="点击API开放平台">
+  </div>
+
+  <div class="step">
+    <strong>② 充值（最低金额即可）</strong>
+    <div style="font-size:14px; color:#555; margin-top:2px;">左侧点「充值」→ 充 <strong>10 元</strong>就够了</div>
+  </div>
+
+  <div class="screenshot">
+    <img src="_runtime/images/充值.png" alt="充值">
+  </div>
+
+  <div class="step">
+    <strong>③ 创建 API Key，复制密钥</strong>
+    <div style="font-size:14px; color:#555; margin-top:2px;">
+      左侧点「API Keys」→「Create API Key」→ 输入名称 → 确定<br>
+      <strong>复制那一串以 sk- 开头的字符</strong>，这就是你的钥匙
+    </div>
+  </div>
+
+  <div class="screenshot">
+    <img src="_runtime/images/创建API.png" alt="创建API Key">
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 第二步：配置密钥 -->
+<!-- ============================================================ -->
+<div class="card">
+  <h2><span class="num">2</span>把 Key 填进启动器（10 秒搞定）</h2>
+
+  <p>两种配置方式，选一个就行：</p>
+
+  <div style="background:#f0f7ff; border-radius:10px; padding:18px; margin:12px 0;">
+    <div style="font-size:16px; font-weight:700;">方式一：EXE 启动器（推荐，同时配置终端 + 网页）</div>
+    <div style="font-size:14px; color:#555; margin:4px 0;">
+      启动器点 <strong>「配置 API 密钥」</strong>→ 选供应商 → 粘贴 Key → 保存。<br>
+      支持 5 个供应商：DeepSeek、OpenAI（自动代理）、Claude、Gemini（自动代理）、OpenRouter。<br>
+      标注「自动代理」的供应商，终端会自动走本地中转服务，无需额外配置。
+    </div>
+  </div>
+
+  <div style="background:#f0f7ff; border-radius:10px; padding:18px; margin:12px 0;">
+    <div style="font-size:16px; font-weight:700;">方式二：网页版 Setup（仅配置网页版）</div>
+    <div style="font-size:14px; color:#555; margin:4px 0;">
+      打开网页版 → 右上角 <strong>Setup</strong> → 选供应商 → 填 Key → 自动拉取模型列表 → 保存。<br>
+      网页版支持更多供应商（Ollama、自定义 API 等），不局限于上面 5 个。
+    </div>
+  </div>
+
+  <div class="tip tip-ok">配置完成！接下来选个模式开始用。</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 第三步：开始使用 -->
+<!-- ============================================================ -->
+<div class="card">
+  <h2><span class="num">3</span>选个模式，开始使用</h2>
+
+  <div style="background:#f0f7ff; border-radius:10px; padding:18px; margin:12px 0;">
+    <div style="font-size:18px; font-weight:700;"> AI 网页版 ← <span style="color:#3b82f6;">新手用这个</span></div>
+    <div style="font-size:14px; color:#555; margin:4px 0;">
+      点一下 → 浏览器自动打开 → 像 ChatGPT 一样聊天就行。<br>
+      开启输入框上方的「智能体模式」还能让 AI 读写你的文件。
+    </div>
+  </div>
+
+  <div class="tip tip-info">
+    <strong>网页版亮点：</strong>
+    <ul class="feature-list">
+      <li><strong>多对话独立隔离</strong> — 切换对话时后台继续运行，消息不串线；关闭页面后 AI 回复自动存盘不丢失</li>
+      <li><strong>智能体超时保护</strong> — API 请求超时从 60s 延长至 180s，复杂任务不再频繁报 Timeout</li>
+      <li><strong>网页搜索</strong> — 智能体模式可搜索网页、抓取页面内容，获取最新信息</li>
+      <li><strong>任务完成提示</strong> — AI 处理完长任务会有浏览器通知，不用一直盯着</li>
+      <li><strong>语音输入</strong> — 支持语音转文字，不想打字时直接说话</li>
+      <li><strong>生成文档</strong> — AI 可以直接生成 Word (.docx)、Excel (.xlsx)、PPT (.pptx) 文件</li>
+      <li><strong>全中文界面</strong> — 工具名称、执行状态、错误提示全部中文化</li>
+      <li><strong>多供应商无缝切换</strong> — 右上角 Setup 随时换供应商，配置即时生效</li>
+    </ul>
+  </div>
+
+  <div style="background:#f5f5f5; border-radius:10px; padding:18px; margin:12px 0;">
+    <div style="font-size:18px; font-weight:700;"> Claude Code 终端 ← 进阶用户</div>
+    <div style="font-size:14px; color:#555; margin:4px 0;">
+      命令行界面，编程功能更强：能直接操作项目文件、执行命令、管理 Git。<br>
+      支持 DeepSeek / Claude / OpenRouter <strong>直连</strong>，OpenAI / Gemini <strong>自动走本地代理</strong>。
+    </div>
+  </div>
+
+  <div style="background:#f5f5f5; border-radius:10px; padding:18px; margin:12px 0;">
+    <div style="font-size:18px; font-weight:700;"> VS Code 编辑器 ← 完整编程环境</div>
+    <div style="font-size:14px; color:#555; margin:4px 0;">
+      便携版 VS Code，无需安装。打开即自动在终端运行 Claude Code，侧边栏预装 Claude Code 扩展。<br>
+      内含预置配置：禁用遥测、禁用自动更新、跳过信任提示、允许自动任务，所有数据存 U 盘。
+    </div>
+  </div>
+
+  <div style="background:#f5f5f5; border-radius:10px; padding:18px; margin:12px 0;">
+    <div style="font-size:18px; font-weight:700;"> 打开工作目录</div>
+    <div style="font-size:14px; color:#555; margin:4px 0;">
+      打开 workspace 文件夹，你的代码和文件都放这里。
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 终端版详细说明 -->
+<!-- ============================================================ -->
+<div class="card">
+  <h2>进阶：终端版 VS 网页版</h2>
+
+  <table>
+    <tr><th style="width:100px;"></th><th>VS Code 版</th><th>网页版</th><th>终端版</th></tr>
+    <tr><td>怎么用</td><td>IDE 里聊天 + 写代码</td><td>浏览器打字聊天</td><td>命令行打字聊天</td></tr>
+    <tr><td>写代码</td><td>完整 IDE：编辑、调试、Git、扩展</td><td>读写文件、搜索网页、执行命令</td><td>操作整个项目、执行命令、Git</td></tr>
+    <tr><td>运行方式</td><td>点击按钮 → 自动打开 workspace</td><td>独立后台服务，不开 EXE 也能用</td><td>需要 EXE 启动器配置环境</td></tr>
+    <tr><td>适合人群</td><td>所有场景，最完整的体验</td><td>日常使用、简单任务</td><td>写代码、改项目、需要终端能力</td></tr>
+  </table>
+
+  <div class="tip tip-info" style="margin-top:12px;">
+    <strong>终端版自动代理说明：</strong><br>
+    • 配 DeepSeek / Claude / OpenRouter → 终端直连，不经过代理<br>
+    • 配 OpenAI / Gemini → 终端请求自动经本地代理（端口 3005）翻译后发出<br>
+    • 状态栏可查看代理运行状态，绿灯 = 正常
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 文件夹说明 -->
+<!-- ============================================================ -->
+<div class="card">
+  <h2> 文件夹里都有啥</h2>
+  <table>
+    <tr><th style="width:150px;">文件/夹</th><th>说明</th></tr>
+    <tr><td><strong>AI启动器.exe</strong></td><td>启动器 — 你只需要双击这个</td></tr>
+    <tr><td>scripts/</td><td>启动脚本（内部调用，不用管）</td></tr>
+    <tr><td>images/</td><td>使用说明配图</td></tr>
+    <tr><td>使用说明.html</td><td>本文件</td></tr>
+    <tr><td>node/</td><td>Node.js 运行环境（不用管）</td></tr>
+    <tr><td>node_modules/</td><td>Claude Code 本体（不用管）</td></tr>
+    <tr><td>dashboard/</td><td>网页版后台 + API 代理（不用管）</td></tr>
+    <tr><td>data/</td><td>聊天记录、API 配置等用户数据（自动生成）</td></tr>
+    <tr><td>workspace/</td><td>你的项目文件夹，代码放这里</td></tr>
+    <tr><td>VSCode/</td><td>便携版 VS Code，完整 AI 编程环境</td></tr>
+    <tr><td>CC-Switch/</td><td>切换 AI 供应商工具（可选）</td></tr>
+    <tr><td>PortableGit/</td><td>便携版 Git，不依赖系统安装</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- FAQ -->
+<!-- ============================================================ -->
+<div class="card">
+  <h2> 常见问题</h2>
+
+  <div class="faq-q">Q: 双击 AI启动器.exe 没反应？</div>
+  <div class="faq-a">需要 .NET Framework（Win10 自带）。还不行就右键 → 以管理员身份运行。</div>
+
+  <div class="faq-q">Q: 点了网页版但浏览器没打开？</div>
+  <div class="faq-a">手动打开浏览器，地址栏输入 <code>http://localhost:3000</code>。先双击启动器，它会把网页版一起启动。</div>
+
+  <div class="faq-q">Q: 网页版能打开但 AI 不回复？</div>
+  <div class="faq-a">点右上角 Setup，检查 API Key 是否配置正确。DeepSeek 不需要梯子，OpenAI/Claude/Gemini 需要。</div>
+
+  <div class="faq-q">Q: 怎么让 AI 生成 Word 或 Excel 文档？</div>
+  <div class="faq-a">AI 网页版开智能体模式 → 告诉它"整理成 Word 文档"或"做成 Excel 表格"就行。AI 会自动调用文档生成工具，支持 .docx、.xlsx、.pptx 三种格式。</div>
+
+  <div class="faq-q">Q: 怎么切换 AI 供应商？</div>
+  <div class="faq-a">两种方式：① 启动器 →「配置 API 密钥」→ 选供应商 → 保存；② 网页版 → 右上角 Setup → 一键切换。</div>
+
+  <div class="faq-q">Q: 网页版支持哪些 AI？</div>
+  <div class="faq-a">所有 OpenAI 兼容接口都支持：DeepSeek、OpenAI、Gemini、Ollama、LM Studio、自定义 API 等。右上角 Setup 可自动拉取模型列表。</div>
+
+  <div class="faq-q">Q: 终端版支持哪些 AI？</div>
+  <div class="faq-a">Anthropic 兼容接口的（DeepSeek、Claude、OpenRouter）直连使用；OpenAI 和 Gemini 通过内置代理自动翻译。EXE 配置界面有标注。</div>
+
+  <div class="faq-q">Q: 网页版和终端版能同时开吗？</div>
+  <div class="faq-a">能。网页版是独立后台服务，不开启动器也能在浏览器单独用（前提是服务已经在运行）。</div>
+
+  <div class="faq-q">Q: 网页版能脱离终端独立用吗？</div>
+  <div class="faq-a">能。网页版有自己的后台服务，直接调 AI 接口，不依赖终端。</div>
+
+  <div class="faq-q">Q: EXE 状态栏的「API 代理」是什么？</div>
+  <div class="faq-a">本地 API 中转服务。配了 OpenAI 或 Gemini 时，它会自动把终端请求翻译成对应格式发给 AI。配 DeepSeek/Claude/OpenRouter 时终端直连，代理空闲。</div>
+</div>
+
+</div>
+
+<div class="footer">
+  <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:6px; flex-wrap:wrap;">
+    <img src="_runtime/images/avatar.png" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+    <span>开发：Bill偷啃 ｜</span>
+    <a href="https://space.bilibili.com/379802977" style="color:#3b82f6; text-decoration:none;">B站主页</a>（ID：Bill偷啃）｜
+    <span>联系：B站私信</span>
+  </div>
+  <div style="font-size:12px;">最后更新：2026 年 5 月 30 日 ｜ 版本 v4.2.0</div>
+</div>
+
+</body>
+</html>
