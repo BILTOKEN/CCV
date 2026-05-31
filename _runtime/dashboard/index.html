@@ -861,7 +861,24 @@ const providerNames = { openrouter:'OpenRouter', gemini:'Gemini', anthropic:'Cla
       }
     }
   });
+
+  // 自动检查更新
+  checkForUpdate();
 })();
+
+async function checkForUpdate() {
+  try {
+    var r = await fetch(API + '/api/updates');
+    var d = await r.json();
+    if (d.updateAvailable) {
+      var banner = document.getElementById('noConfigBanner');
+      banner.innerHTML = '🔄 有新版本 <b>' + d.latest + '</b> 可用！ <a href="' + d.releaseUrl + '" target="_blank" style="color:var(--accent);font-weight:700">下载更新</a>';
+      banner.style.display = 'flex';
+      banner.style.background = '#fef3c7';
+      banner.style.borderColor = '#f59e0b';
+    }
+  } catch {}
+}
 
 async function loadConfig() {
   try {

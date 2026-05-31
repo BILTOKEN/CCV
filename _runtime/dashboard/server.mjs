@@ -1806,16 +1806,17 @@ const server = createServer(async (req, res) => {
             return sendJSON(res, 200, { content: readFileSync(filePath, 'utf-8').slice(0, 10000) });
         }
 
-        // Updates
+        // Updates — 检查 GitHub Releases
         if (url.pathname === '/api/updates' && req.method === 'GET') {
-            const current = getInstalledVersion(), latest = getLatestVersion();
-            return sendJSON(res, 200, { current: current || 'unknown', latest: latest || 'unknown', updateAvailable: current && latest && current !== latest });
-        }
-        if (url.pathname === '/api/updates/install' && req.method === 'POST') {
+            const verFile = join(ROOT_DIR, 'VERSION');
+            const current = existsSync(verFile) ? readFileSync(verFile, 'utf-8').trim() : 'v4.2.0';
+            let latest = current;
             try {
-                execSync('npm install @gitlawb/openclaude@latest --no-audit --no-fund', { cwd: BIN_DIR, encoding: 'utf-8', timeout: 60000 });
-                return sendJSON(res, 200, { success: true, version: getInstalledVersion() });
-            } catch (e) { return sendJSON(res, 500, { error: e.message }); }
+                const r = await fetchExternal('https://api.github.com/repos/BILTOKEN/CCV/releases/latest');
+                const data = JSON.parse(r.data);
+                latest = data.tag_name || current;
+            } catch {}
+            return sendJSON(res, 200, { current, latest, updateAvailable: current !== latest, releaseUrl: `https://github.com/BILTOKEN/CCV/releases/latest` });
         }
 
         // Launch

@@ -638,21 +638,34 @@ namespace ClaudeLauncher
                 Size = new Size(150, 22),
                 AutoSize = false
             };
+            var aboutLink = new Label
+            {
+                Text = "关于 CCV",
+                Font = new Font("Segoe UI", 8, FontStyle.Underline),
+                ForeColor = Color.FromArgb(80, 200, 120),
+                Location = new Point(cX + 495, 52),
+                Size = new Size(55, 22),
+                TextAlign = ContentAlignment.MiddleRight,
+                Cursor = Cursors.Hand
+            };
+            aboutLink.Click += (s, e) => { using (var f = new AboutForm()) f.ShowDialog(); };
+            aboutLink.MouseEnter += (s, e) => aboutLink.ForeColor = Colors.Accent;
+            aboutLink.MouseLeave += (s, e) => aboutLink.ForeColor = Colors.TextDim;
+
             var devLabel = new Label
             {
                 Text = Program.APP_VERSION + " | " + Program.DEV_BILIBILI,
                 Font = new Font("Segoe UI", 8),
                 ForeColor = Colors.TextDim,
                 Location = new Point(cX + 410, 52),
-                Size = new Size(130, 22),
+                Size = new Size(82, 22),
                 TextAlign = ContentAlignment.MiddleRight,
-                AutoSize = false,
-                Anchor = AnchorStyles.Right
+                AutoSize = false
             };
             statusBar.Controls.AddRange(new Control[] {
                 apiDot, apiStatusText, dashboardDot, dashboardStatusText,
                 proxyDot, proxyStatusText,
-                statusLabel, devLabel
+                statusLabel, devLabel, aboutLink
             });
 
             Controls.AddRange(new Control[] {
@@ -995,6 +1008,121 @@ namespace ClaudeLauncher
                 }
                 e.Graphics.ResetTransform();
             }
+        }
+    }
+
+    // ─── 关于窗口 ───────────────────────────────────────────
+    class AboutForm : Form
+    {
+        public AboutForm()
+        {
+            Text = "关于 CCV";
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false; MinimizeBox = false;
+            StartPosition = FormStartPosition.CenterParent;
+            ClientSize = new Size(360, 440);
+            BackColor = Color.FromArgb(28, 30, 42);
+            Font = new Font("Segoe UI", 9);
+
+            int y = 28;
+            var avatarPath = Path.Combine(Program.ROOT, "images", "avatar.png");
+            var avatar = new PictureBox { Location = new Point(140, y), Size = new Size(80, 80), SizeMode = PictureBoxSizeMode.Zoom };
+            if (File.Exists(avatarPath)) avatar.Image = Image.FromFile(avatarPath);
+            avatar.Paint += (s, e) => { using (var g = new GraphicsPath()) { g.AddEllipse(1, 1, 78, 78); avatar.Region = new Region(g); } };
+            y += 92;
+
+            var nameLbl = new Label { Text = "Bill偷啃", Font = new Font("Segoe UI", 14, FontStyle.Bold), ForeColor = Color.White, Location = new Point(0, y), Size = new Size(360, 28), TextAlign = ContentAlignment.MiddleCenter };
+            y += 24;
+            var roleLbl = new Label { Text = "开发者", Font = new Font("Segoe UI", 9), ForeColor = Color.FromArgb(140, 140, 160), Location = new Point(0, y), Size = new Size(360, 18), TextAlign = ContentAlignment.MiddleCenter };
+            y += 32;
+
+            // 联系方式 — 简洁三行
+            var line1 = MakeContactLine("QQ群  113571528", y);
+            y += 26;
+            var line2 = MakeContactLine("邮箱  3180074161@qq.com", y);
+            y += 26;
+            var line3 = new Label { Text = "B站  space.bilibili.com/379802977", Font = new Font("Segoe UI", 9), ForeColor = Color.FromArgb(120, 180, 240), Location = new Point(0, y), Size = new Size(360, 20), TextAlign = ContentAlignment.MiddleCenter, Cursor = Cursors.Hand };
+            line3.Click += (s, e) => Process.Start("https://space.bilibili.com/379802977");
+            y += 36;
+
+            var tip = new Label { Text = "喜欢 CCV？联系并打赏，在下方加入你的专属头像", Font = new Font("Segoe UI", 9), ForeColor = Color.FromArgb(160, 140, 140), Location = new Point(0, y), Size = new Size(360, 20), TextAlign = ContentAlignment.MiddleCenter };
+            y += 32;
+
+            var sep = new Label { Text = "贡献者", Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = Color.FromArgb(180, 180, 200), Location = new Point(0, y), Size = new Size(360, 20), TextAlign = ContentAlignment.MiddleCenter };
+            y += 26;
+
+            var contribPanel = new FlowLayoutPanel { Location = new Point(20, y), Size = new Size(320, 110), AutoScroll = true, WrapContents = true };
+            LoadContributors(contribPanel);
+
+            Controls.AddRange(new Control[] { avatar, nameLbl, roleLbl, line1, line2, line3, tip, sep, contribPanel });
+        }
+
+        Label MakeContactLine(string text, int y)
+        {
+            return new Label { Text = text, Font = new Font("Segoe UI", 9), ForeColor = Color.FromArgb(200, 200, 210), Location = new Point(0, y), Size = new Size(360, 20), TextAlign = ContentAlignment.MiddleCenter };
+        }
+
+        void LoadContributors(FlowLayoutPanel panel)
+        {
+            try {
+                var jsonPath = Path.Combine(Program.ROOT, "images", "contributors.json");
+                if (!File.Exists(jsonPath)) return;
+                var list = JsonHelper.ParseContributors(File.ReadAllText(jsonPath));
+                foreach (var c in list) {
+                    var card = new Panel { Size = new Size(90, 115), BackColor = Color.FromArgb(35, 37, 50) };
+                    var pic = new PictureBox { Location = new Point(17, 8), Size = new Size(56, 56), SizeMode = PictureBoxSizeMode.Zoom };
+                    var af = Path.Combine(Program.ROOT, c.avatar);
+                    if (File.Exists(af)) pic.Image = Image.FromFile(af);
+                    pic.Paint += (s, e) => { using (var g = new GraphicsPath()) { g.AddEllipse(1, 1, 54, 54); pic.Region = new Region(g); } };
+                    var nm = new Label { Text = c.name, Font = new Font("Segoe UI", 8, FontStyle.Bold), ForeColor = Color.White, Location = new Point(0, 66), Size = new Size(90, 18), TextAlign = ContentAlignment.MiddleCenter };
+                    var rl = new Label { Text = c.role, Font = new Font("Segoe UI", 7), ForeColor = Color.FromArgb(150, 150, 170), Location = new Point(0, 82), Size = new Size(90, 16), TextAlign = ContentAlignment.MiddleCenter };
+                    card.Controls.AddRange(new Control[] { pic, nm, rl });
+                    panel.Controls.Add(card);
+                }
+            } catch {}
+        }
+    }
+
+    class Contributor
+    {
+        public string name;
+        public string role;
+        public string avatar;
+    }
+
+    static class JsonHelper
+    {
+        public static List<Contributor> ParseContributors(string json)
+        {
+            var result = new List<Contributor>();
+            int pos = 0;
+            while (pos < json.Length) {
+                int objStart = json.IndexOf('{', pos);
+                if (objStart < 0) break;
+                int objEnd = json.IndexOf('}', objStart);
+                if (objEnd < 0) break;
+                string obj = json.Substring(objStart + 1, objEnd - objStart - 1);
+                var c = new Contributor();
+                c.name = ExtractJsonValue(obj, "name");
+                c.role = ExtractJsonValue(obj, "role");
+                c.avatar = ExtractJsonValue(obj, "avatar");
+                if (!string.IsNullOrEmpty(c.name)) result.Add(c);
+                pos = objEnd + 1;
+            }
+            return result;
+        }
+
+        static string ExtractJsonValue(string obj, string key)
+        {
+            int keyIdx = obj.IndexOf("\"" + key + "\"");
+            if (keyIdx < 0) return "";
+            int colonIdx = obj.IndexOf(':', keyIdx);
+            if (colonIdx < 0) return "";
+            int valStart = obj.IndexOf('"', colonIdx);
+            if (valStart < 0) return "";
+            int valEnd = obj.IndexOf('"', valStart + 1);
+            if (valEnd < 0) return "";
+            return obj.Substring(valStart + 1, valEnd - valStart - 1);
         }
     }
 
